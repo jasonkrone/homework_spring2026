@@ -12,6 +12,8 @@ import torch
 import tyro
 import wandb
 from torch.utils.data import DataLoader
+from tqdm import tqdm
+
 
 from hw1_imitation.data import (
     Normalizer,
@@ -20,7 +22,7 @@ from hw1_imitation.data import (
     load_pusht_zarr,
 )
 from hw1_imitation.model import build_policy, PolicyType
-from hw1_imitation.evaluation import Logger
+from hw1_imitation.evaluation import Logger, evaluate_policy
 
 LOGDIR_PREFIX = "exp"
 
@@ -41,6 +43,7 @@ class TrainConfig:
     lr: float = 3e-4
     weight_decay: float = 0.0
     hidden_dims: tuple[int, ...] = (256, 256, 256)
+    use_bias: bool = False
     # The number of epochs to train for.
     num_epochs: int = 400
     # How often to run evaluation, measured in training steps.
@@ -116,7 +119,16 @@ def run_training(config: TrainConfig) -> None:
         action_dim=actions.shape[1],
         chunk_size=config.chunk_size,
         hidden_dims=config.hidden_dims,
+        use_bias=config.use_bias,
     ).to(device)
+
+    optimizer = torch.optim.AdamW(
+        model.parameters(), 
+        lr=config.lr, 
+        betas=(0.9, 0.999), 
+        eps=1e-08, 
+        weight_decay=0.0, 
+    )
 
     exp_name = f"seed_{config.seed}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
     if config.exp_name is not None:
@@ -127,7 +139,39 @@ def run_training(config: TrainConfig) -> None:
     )
     logger = Logger(log_dir)
 
-    ### TODO: PUT YOUR MAIN TRAINING LOOP HERE ###
+    step = 0
+    steps_per_epoch = len(loader)
+    log_interval = 1000
+    eval_interval = steps_per_epoch * 20
+    pbar = tqdm(total=steps_per_epoch * config.num_epochs)
+
+    for epoch in range(config.num_epochs):
+        data_iter = iter(loader)
+        for x, y in data_iter:
+            _, loss = model(x, y)
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
+            # log metrics
+            logger.log(row={"loss": loss.item(), "epoch": epoch}, step=step)
+            step += 1
+            # update pbar
+            if step % log_interval == 0:
+                pbar.update(log_interval)
+                print("loss:", loss)
+
+            if step % eval_interval == 0:
+                evaluate_policy(
+                    model=model,
+                    normalizer=normalizer,
+                    device=device,
+                    chunk_size=config.chunk_size,
+                    video_size=config.video_size,
+                    num_video_episodes=config.num_video_episodes,
+                    flow_num_steps=config.flow_num_steps,
+                    step=step,
+                    logger=logger,
+                )
 
     logger.dump_for_grading()
 
