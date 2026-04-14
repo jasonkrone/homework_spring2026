@@ -42,11 +42,12 @@ class TrainConfig:
 
     batch_size: int = 128
     lr: float = 3e-3
+    lr_min: float | None = 3e-3 / 100.0
     # pct of iters to warmup lr 
     pct_warmup_iters: float = 0.1
 
     weight_decay: float = 0.1
-    hidden_dims: tuple[int, ...] = (1024, 1024, 1024) #(256, 256, 256)
+    hidden_dims: tuple[int, ...] = (512, 512, 512)
     use_bias: bool = False
 
     # The number of epochs to train for.
@@ -158,6 +159,7 @@ def run_training(config: TrainConfig) -> None:
         warmup_iters=int(config.pct_warmup_iters * num_total_steps),
         max_iters=num_total_steps,
         lr_max=config.lr,
+        cos_lr_min=config.lr_min,
     )
 
     for epoch in range(config.num_epochs):
