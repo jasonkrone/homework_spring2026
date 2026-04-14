@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import modal
+import numpy as np
 
 from hw1_imitation.train import TrainConfig, parse_train_config, run_training
 
@@ -59,22 +60,40 @@ env = {
     "WANDB_DIR": f"{VOLUME_PATH}/wandb",
 }
 
-
+# gpu=DEFAULT_GPU,
 @app.function(
     volumes={VOLUME_PATH: volume},
     timeout=60 * 60 * 4,
     env=env,
     image=image,
-    gpu=DEFAULT_GPU,
     cpu=DEFAULT_CPU,
 )
-def train_remote(*args: str) -> None:
-    defaults = TrainConfig()
+def train_remote(config: dict) -> None:
+    defaults = TrainConfig(**config)
     defaults.data_dir = Path(VOLUME_PATH) / "data"
     config = parse_train_config(
-        list(args),
         defaults=defaults,
         description="Train on Modal.",
     )
     run_training(config)
     volume.commit()
+
+
+@app.local_entrypoint()
+def main():
+    n_trials = 1
+    lr_list = np.logspace(-15, -6, num=n_trials, base=2)
+    bs_list = [int(bs) for bs in np.logspace(6, 15, num=n_trials, base=2)]
+
+    config_list = []
+    for lr in lr_list:
+        for bs in bs_list:
+            exp_name = f"modal_bs-{bs}_lr-{lr}"
+            config_list.append({
+                "batch_size": bs,
+                "lr": lr,
+                "exp_name": exp_name,
+            })
+
+    for config in config_list:
+        train_remote.spawn(config)

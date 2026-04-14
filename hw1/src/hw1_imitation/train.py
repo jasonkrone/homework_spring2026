@@ -23,6 +23,7 @@ from hw1_imitation.data import (
 )
 from hw1_imitation.model import build_policy, PolicyType
 from hw1_imitation.evaluation import Logger, evaluate_policy
+from hw1_imitation.lr_schedule import CosineAnnealingWithLinearWarmupLR
 
 LOGDIR_PREFIX = "exp"
 
@@ -40,14 +41,18 @@ class TrainConfig:
     chunk_size: int = 8
 
     batch_size: int = 128
-    lr: float = 3e-4
-    weight_decay: float = 0.0
-    hidden_dims: tuple[int, ...] = (256, 256, 256)
+    lr: float = 3e-3
+    # pct of iters to warmup lr 
+    pct_warmup_iters: float = 0.1
+
+    weight_decay: float = 0.1
+    hidden_dims: tuple[int, ...] = (1024, 1024, 1024) #(256, 256, 256)
     use_bias: bool = False
+
     # The number of epochs to train for.
     num_epochs: int = 400
     # How often to run evaluation, measured in training steps.
-    eval_interval: int = 10_000
+    eval_interval: int = 1_000_000
     num_video_episodes: int = 5
     video_size: tuple[int, int] = (256, 256)
     # How often to log training metrics, measured in training steps.
@@ -140,20 +145,34 @@ def run_training(config: TrainConfig) -> None:
     logger = Logger(log_dir)
 
     step = 0
-    steps_per_epoch = len(loader)
+    num_total_steps = len(loader) * config.num_epochs
+    eval_interval = num_total_steps // 8
     log_interval = 1000
-    eval_interval = steps_per_epoch * 20
-    pbar = tqdm(total=steps_per_epoch * config.num_epochs)
+    pbar = tqdm(total=num_total_steps)
+    # [X] cosine LR schedule 
+    # weight decay 
+    # deeper network 
+
+    scheduler = CosineAnnealingWithLinearWarmupLR(
+        optimizer=optimizer,
+        warmup_iters=int(config.pct_warmup_iters * num_total_steps),
+        max_iters=num_total_steps,
+        lr_max=config.lr,
+    )
 
     for epoch in range(config.num_epochs):
         data_iter = iter(loader)
         for x, y in data_iter:
+            x = x.to(device)
+            y = y.to(device)
             _, loss = model(x, y)
             loss.backward()
             optimizer.step()
             optimizer.zero_grad(set_to_none=True)
+            scheduler.step()
+
             # log metrics
-            logger.log(row={"loss": loss.item(), "epoch": epoch}, step=step)
+            logger.log(row={"loss": loss.item(), "epoch": epoch, "lr": scheduler.get_last_lr()[0]}, step=step)
             step += 1
             # update pbar
             if step % log_interval == 0:
@@ -172,6 +191,20 @@ def run_training(config: TrainConfig) -> None:
                     step=step,
                     logger=logger,
                 )
+
+    # evaluate at the end of training if we didn't already 
+    if step % eval_interval != 0:
+        evaluate_policy(
+            model=model,
+            normalizer=normalizer,
+            device=device,
+            chunk_size=config.chunk_size,
+            video_size=config.video_size,
+            num_video_episodes=config.num_video_episodes,
+            flow_num_steps=config.flow_num_steps,
+            step=step,
+            logger=logger,
+        )
 
     logger.dump_for_grading()
 
