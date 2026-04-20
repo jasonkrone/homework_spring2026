@@ -46,7 +46,7 @@ class TrainConfig:
     # pct of iters to warmup lr 
     pct_warmup_iters: float = 0.1
 
-    weight_decay: float = 0.1
+    weight_decay: float = 0.0
     hidden_dims: tuple[int, ...] = (512, 512, 512)
     use_bias: bool = False
 
@@ -57,7 +57,7 @@ class TrainConfig:
     num_video_episodes: int = 5
     video_size: tuple[int, int] = (256, 256)
     # How often to log training metrics, measured in training steps.
-    log_interval: int = 100
+    log_interval: int = 1000
     # Random seed.
     seed: int = 42
     # WandB project name.
@@ -96,8 +96,12 @@ def config_to_dict(config: TrainConfig) -> dict[str, Any]:
 
 
 def run_training(config: TrainConfig) -> None:
+    """
+    TODO: should play w/ action chunk size
+    """
     set_seed(config.seed)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    is_gpu = torch.cuda.is_available()
+    device = torch.device("cuda" if is_gpu else "cpu")
     print(f"Using device: {device}")
 
     zarr_path = download_pusht(config.data_dir)
@@ -128,12 +132,15 @@ def run_training(config: TrainConfig) -> None:
         use_bias=config.use_bias,
     ).to(device)
 
+    if is_gpu:
+        model = torch.compile(model)
+
     optimizer = torch.optim.AdamW(
         model.parameters(), 
         lr=config.lr, 
         betas=(0.9, 0.999), 
         eps=1e-08, 
-        weight_decay=0.0, 
+        weight_decay=config.weight_decay, 
     )
 
     exp_name = f"seed_{config.seed}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -148,11 +155,7 @@ def run_training(config: TrainConfig) -> None:
     step = 0
     num_total_steps = len(loader) * config.num_epochs
     eval_interval = num_total_steps // 8
-    log_interval = 1000
     pbar = tqdm(total=num_total_steps)
-    # [X] cosine LR schedule 
-    # weight decay 
-    # deeper network 
 
     scheduler = CosineAnnealingWithLinearWarmupLR(
         optimizer=optimizer,
@@ -177,8 +180,8 @@ def run_training(config: TrainConfig) -> None:
             logger.log(row={"loss": loss.item(), "epoch": epoch, "lr": scheduler.get_last_lr()[0]}, step=step)
             step += 1
             # update pbar
-            if step % log_interval == 0:
-                pbar.update(log_interval)
+            if step % config.log_interval == 0:
+                pbar.update(config.log_interval)
                 print("loss:", loss)
 
             if step % eval_interval == 0:
