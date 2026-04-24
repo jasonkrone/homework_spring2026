@@ -1,0 +1,28 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\renewcommand{\thesection}{\Roman{section}}
+
+\title{Deep RL}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Assignment 1}
+
+\subsection{Flow Matching Policy vs. MSE Policy}
+The flow policy agent takes actions to achieve the goal in a more orderly and consistent way.
+In contrast the MSE policy agent either achieves the goal quickly and efficiently or it gets very off track and performs actions that appear not to be leading directly toward pushing the T to the target location. A few hypothesese as to what might be going wrong here: 
+\begin{itemize}
+\item the MSE policy isn't as equipped to handle multimodal distributions and when in a scenario where it should pick a mode it instead splits the difference leading to a suboptimal action.
+\item the MSE policy may be less consistent because its predictions are worse than the flow policy and as a result it gets out of distribution more often.
+\end{itemize}
+
+
+\end{document}
