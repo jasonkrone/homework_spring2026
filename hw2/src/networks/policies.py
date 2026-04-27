@@ -100,6 +100,7 @@ class MLPPolicyPG(MLPPolicy):
         advantages = ptu.from_numpy(advantages)
 
         # TODO: compute the policy gradient actor loss
+        # we want to ...
         loss = None
 
         # TODO: perform an optimizer step
