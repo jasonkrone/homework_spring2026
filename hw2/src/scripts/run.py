@@ -74,7 +74,7 @@ def run_training_loop(logger, args):
 
         # train the agent using the sampled trajectories and the agent's update function
         train_info: dict = agent.update(
-            obs=trajs_dict["oberservation"],
+            obs=trajs_dict["observation"],
             actions=trajs_dict["action"],
             rewards=trajs_dict["reward"],
             terminals=trajs_dict["terminal"],

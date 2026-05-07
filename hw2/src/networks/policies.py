@@ -59,8 +59,14 @@ class MLPPolicy(nn.Module):
     @torch.no_grad()
     def get_action(self, obs: np.ndarray) -> np.ndarray:
         """Takes a single observation (as a numpy array) and returns a single action (as a numpy array)."""
-        # TODO: implement get_action
-        action = None
+        obs = torch.tensor(obs, device=ptu.device)
+        fw = self.forward(obs)
+
+        if self.discrete:
+            categorical = distributions.Categorical(logits=fw)
+            action = ptu.to_numpy(categorical.sample())
+        else:
+            raise ValueError("not implemented yet")
 
         return action
 
@@ -71,11 +77,11 @@ class MLPPolicy(nn.Module):
         flexible objects, such as a `torch.distributions.Distribution` object. It's up to you!
         """
         if self.discrete:
-            # TODO: define the forward pass for a policy with a discrete action space.
-            pass
+            out = self.logits_net(obs)
         else:
             # TODO: define the forward pass for a policy with a continuous action space.
             pass
+        return out
 
     def update(self, obs: np.ndarray, actions: np.ndarray, *args, **kwargs) -> dict:
         """
@@ -95,16 +101,23 @@ class MLPPolicyPG(MLPPolicy):
         advantages: np.ndarray,
     ) -> dict:
         """Implements the policy gradient actor update."""
+        """
+        obs: [T, d_obs] 
+        """
         obs = ptu.from_numpy(obs)
-        actions = ptu.from_numpy(actions)
+        actions = ptu.from_numpy(actions).long()
         advantages = ptu.from_numpy(advantages)
 
-        # TODO: compute the policy gradient actor loss
-        # we want to ...
-        loss = None
+        self.optimizer.zero_grad()
 
-        # TODO: perform an optimizer step
-        pass
+        logits = self.forward(obs)
+        loss_fn = nn.modules.loss.CrossEntropyLoss(reduction="none")
+        loss = loss_fn(logits, actions) 
+        loss = loss *  advantages
+        # i feel like this reduction is wrong b/c it's reducing by 1 / (N*H) vs. just 1/N 
+        loss = loss.mean()
+        loss.backward()
+        self.optimizer.step()
 
         return {
             "Actor Loss": loss.item(),
