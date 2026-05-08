@@ -158,7 +158,8 @@ class FlowMatchingPolicy(BasePolicy):
         v_pred = self.model(x_in)
         # TODO: kinda redundant way to define the loss
         loss = torch.mean(torch.norm(v_pred - v_target, p=2)**2)
-        return loss
+        v_pred = v_pred.reshape(B, self.chunk_size, self.action_dim)
+        return v_pred, loss
 
     def sample_actions(
         self,

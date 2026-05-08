@@ -119,7 +119,10 @@ class PGAgent(nn.Module):
         Helper function which takes a list of rewards {r_0, r_1, ..., r_t', ... r_T} and returns a list where the entry
         in each index t is sum_{t'=t}^T gamma^(t'-t) * r_{t'}.
         """
-        return None
+        T = len(rewards)
+        discounts = np.power(self.gamma, np.arange(T))
+        reward_to_go = np.array([sum(rewards[i:]*discounts[:T-i]) for i in range(T)])
+        return reward_to_go
 
     def _calculate_q_vals(self, rewards: Sequence[np.ndarray]) -> Sequence[np.ndarray]:
         """Monte Carlo estimation of the Q function."""
@@ -134,7 +137,7 @@ class PGAgent(nn.Module):
             # Case 2: in reward-to-go PG, we only use the rewards after timestep t to estimate the Q-value for (s_t, a_t).
             # In other words: Q(s_t, a_t) = sum_{t'=t}^T gamma^(t'-t) * r_{t'}
             # TODO: use the helper function self._discounted_reward_to_go to calculate the Q-values
-            q_values = None
+            q_values = [self._discounted_reward_to_go(traj_rewards) for traj_rewards in rewards]
 
         return q_values
 
