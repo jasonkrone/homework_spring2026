@@ -2,6 +2,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath, amssymb}
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{hyperref}
 
 \renewcommand{\thesection}{\Roman{section}}
@@ -24,5 +25,38 @@ In contrast the MSE policy agent either achieves the goal quickly and efficientl
 \item the MSE policy may be less consistent because its predictions are worse than the flow policy and as a result it gets out of distribution more often.
 \end{itemize}
 
+\section{Assignment 2}
+\subsection{3.2 Questions}
 
+\begin{figure}[h]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{plots/hw2/small_batch_size.png}
+    \caption{Small Batch Size}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{plots/hw2/large_batch_size.png}
+    \caption{Large Batch Size}
+\end{subfigure}
+\end{figure}
+
+\begin{itemize}
+\item Which value estimator has better performance without advantage normalization: the trajectory-centric one, or the one using reward-to-go?
+\begin{itemize}
+\item Reward to go (RTG) has better performance without advantage normalization. You can see that RTG converges to 200 in both the large and small batch cases whereas the baseline does not in the small batch case.
+\end{itemize}
+\item Between the two value estimators, why do you think one is generally preferred over the other?
+\begin{itemize}
+\item The RTG esimator delivers higher avg return and lower stdev return when advantage normalization is not used.
+\end{itemize}
+\item Did advantage normalization help?
+\begin{itemize}
+\item Yes, this was the most significant impactful change. Turning advantage normalization on increased the speed of learning and decreased the variance.
+\end{itemize}
+\item Did the batch size make an impact?
+\begin{itemize}
+\item Yes, the returns are lower stdev for larger batch size. 
+\end{itemize}
+\end{itemize}
 \end{document}
