@@ -6,7 +6,6 @@ from torch import optim
 
 import numpy as np
 import torch
-from torch import distributions
 
 from infrastructure import pytorch_util as ptu
 
@@ -48,6 +47,7 @@ class MLPPolicy(nn.Module):
                 torch.zeros(ac_dim, dtype=torch.float32, device=ptu.device)
             )
             parameters = itertools.chain([self.logstd], self.mean_net.parameters())
+            
 
         self.optimizer = optim.Adam(
             parameters,
@@ -59,15 +59,15 @@ class MLPPolicy(nn.Module):
     @torch.no_grad()
     def get_action(self, obs: np.ndarray) -> np.ndarray:
         """Takes a single observation (as a numpy array) and returns a single action (as a numpy array)."""
-        obs = torch.tensor(obs, device=ptu.device)
+        obs = torch.tensor(obs, device=ptu.device, dtype=torch.float)
         fw = self.forward(obs)
 
         if self.discrete:
-            categorical = distributions.Categorical(logits=fw)
+            categorical = D.Categorical(logits=fw)
             action = ptu.to_numpy(categorical.sample())
         else:
-            raise ValueError("not implemented yet")
-
+            mu, stdev = fw
+            action = D.MultiVariateNormal(mu, scale_tril=torch.diag(stdev)).sample()
         return action
 
     def forward(self, obs: torch.FloatTensor):
@@ -76,11 +76,14 @@ class MLPPolicy(nn.Module):
         able to differentiate through it. For example, you can return a torch.FloatTensor. You can also return more
         flexible objects, such as a `torch.distributions.Distribution` object. It's up to you!
         """
+        # TODO: jpk probably better to do distributions here
+
         if self.discrete:
             out = self.logits_net(obs)
         else:
-            # TODO: define the forward pass for a policy with a continuous action space.
-            pass
+            mu = self.mean_net(obs)
+            stdev = torch.exp(self.logstd)
+            out = (mu, stdev)
         return out
 
     def update(self, obs: np.ndarray, actions: np.ndarray, *args, **kwargs) -> dict:
@@ -110,12 +113,18 @@ class MLPPolicyPG(MLPPolicy):
 
         self.optimizer.zero_grad()
 
-        logits = self.forward(obs)
-        loss_fn = nn.modules.loss.CrossEntropyLoss(reduction="none")
-        loss = loss_fn(logits, actions) 
-        loss = loss *  advantages
-        # i feel like this reduction is wrong b/c it's reducing by 1 / (N*H) vs. just 1/N 
+        if self.discrete:
+            logits = self.forward(obs)
+            loss_fn = nn.modules.loss.CrossEntropyLoss(reduction="none")
+            loss = loss_fn(logits, actions) 
+        else:
+            mu, stdev = self.forward(obs)
+            loss = -1.0 * D.MultiVariateNormal(mu, scale_tril=torch.diag(stdev)).log_prob(actions)
+
+        loss = loss * advantages
         loss = loss.mean()
+
+        # i feel like this reduction is wrong b/c it's reducing by 1 / (N*H) vs. just 1/N 
         loss.backward()
         self.optimizer.step()
 

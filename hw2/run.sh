@@ -1,7 +1,12 @@
 #!/bin/bash
 
 
-function launch_runs() {
+function 4dot2() {
+    #uv run src/scripts/run.py --env_name HalfCheetah-v4 -n 100 -b 5000 -eb 3000 -rtg --discount 0.95 -lr 0.01 --exp_name cheetah
+    uv run src/scripts/run.py --env_name HalfCheetah-v4 -n 100 -b 5000 -eb 3000 -rtg --discount 0.95 -lr 0.01 --use_baseline -blr 0.01 -bgs 5 --exp_name cheetah_baseline
+}
+
+function 3dot2() {
     # n: iters
     # b: batch size
     # rtg: use reward to go

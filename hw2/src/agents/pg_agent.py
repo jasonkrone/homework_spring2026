@@ -88,14 +88,13 @@ class PGAgent(nn.Module):
         )
 
         # step 3: use all datapoints (s_t, a_t, adv_t) to update the PG actor/policy
-        # TODO: update the PG actor/policy network once using the advantages
         info: dict = self.actor.update(obs, actions, advantages)
 
         # step 4: if needed, use all datapoints (s_t, a_t, q_t) to update the PG critic/baseline
+        # TODO: JPK we could probably impprove V_pi by fitting on (s, r(s, a) + V_pi(s_t+1))
         if self.critic is not None:
-            # TODO: perform `self.baseline_gradient_steps` updates to the critic/baseline network
-            critic_info = None
-
+            for _ in self.baseline_gradient_steps:
+                critic_info = self.critic.update(obs, q_values)
             info.update(critic_info)
 
         return info
@@ -153,16 +152,13 @@ class PGAgent(nn.Module):
         Operates on flat 1D NumPy arrays.
         """
         if self.critic is None:
-            # TODO: if no baseline, then what are the advantages?
             advantages = q_values.copy()
         else:
-            # TODO: run the critic and use it as a baseline
-            values = None
+            values = ptu.to_numpy(self.critic(obs))
             assert values.shape == q_values.shape
 
             if self.gae_lambda is None:
-                # TODO: if using a baseline, but not GAE, what are the advantages?
-                advantages = None
+                advantages = q_values - values
             else:
                 # TODO: implement GAE
                 batch_size = obs.shape[0]
