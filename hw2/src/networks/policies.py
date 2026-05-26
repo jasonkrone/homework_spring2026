@@ -67,7 +67,8 @@ class MLPPolicy(nn.Module):
             action = ptu.to_numpy(categorical.sample())
         else:
             mu, stdev = fw
-            action = D.MultiVariateNormal(mu, scale_tril=torch.diag(stdev)).sample()
+            normal = D.MultivariateNormal(mu, scale_tril=torch.diag(stdev))
+            action = ptu.to_numpy(normal.sample())
         return action
 
     def forward(self, obs: torch.FloatTensor):
@@ -108,7 +109,7 @@ class MLPPolicyPG(MLPPolicy):
         obs: [T, d_obs] 
         """
         obs = ptu.from_numpy(obs)
-        actions = ptu.from_numpy(actions).long()
+        actions = ptu.from_numpy(actions)
         advantages = ptu.from_numpy(advantages)
 
         self.optimizer.zero_grad()
@@ -116,10 +117,10 @@ class MLPPolicyPG(MLPPolicy):
         if self.discrete:
             logits = self.forward(obs)
             loss_fn = nn.modules.loss.CrossEntropyLoss(reduction="none")
-            loss = loss_fn(logits, actions) 
+            loss = loss_fn(logits, actions.long()) 
         else:
             mu, stdev = self.forward(obs)
-            loss = -1.0 * D.MultiVariateNormal(mu, scale_tril=torch.diag(stdev)).log_prob(actions)
+            loss = -1.0 * D.MultivariateNormal(mu, scale_tril=torch.diag(stdev)).log_prob(actions)
 
         loss = loss * advantages
         loss = loss.mean()

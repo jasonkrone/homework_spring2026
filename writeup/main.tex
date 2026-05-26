@@ -59,4 +59,34 @@ In contrast the MSE policy agent either achieves the goal quickly and efficientl
 \item Yes, the returns are lower stdev for larger batch size. 
 \end{itemize}
 \end{itemize}
+
+\subsection{4.2 Questions}
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/hw2/half_cheetah_baseline_ablation.png}
+    \caption{Half Cheetah: Baseline Ablation}
+\end{subfigure}
+
+\vspace{1em}
+
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/hw2/half_cheetah_blr_bgs.png}
+    \caption{Half Cheetah: Decreased Baseline Learning Rate / Gradient Steps}
+\end{subfigure}
+\end{figure}
+
+\begin{itemize}
+\item Run another experiment with a decreased number of baseline gradient steps (-bgs) or baseline learning
+rate (-blr). How does this affect (a) the baseline learning curve and (b) the performance of the policy
+\begin{itemize}
+\item (a) reducing the baseline LR or gradient steps increases the amount of env steps required for the baseline loss to plateau at a low value. In addition, changing these values causes the loss to initially increase vs. decrease. None of theses variants reach comparable loss as the default hyper-param run, and the best loss of any variant is ~68\% higher. (b) all variants lag on avg. train return while for avg. eval return all variants lag except for low LR, which catches up in the final iters.  
+\end{itemize}
+\end{itemize}
+
+
 \end{document}
+

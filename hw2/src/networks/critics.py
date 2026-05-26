@@ -35,7 +35,7 @@ class ValueCritic(nn.Module):
         )
 
     def forward(self, obs: torch.Tensor) -> torch.Tensor:
-        return self.network(obs)
+        return self.network(obs).squeeze()
  
 
     def update(self, obs: np.ndarray, q_values: np.ndarray) -> dict:

@@ -93,7 +93,7 @@ class PGAgent(nn.Module):
         # step 4: if needed, use all datapoints (s_t, a_t, q_t) to update the PG critic/baseline
         # TODO: JPK we could probably impprove V_pi by fitting on (s, r(s, a) + V_pi(s_t+1))
         if self.critic is not None:
-            for _ in self.baseline_gradient_steps:
+            for _ in range(self.baseline_gradient_steps):
                 critic_info = self.critic.update(obs, q_values)
             info.update(critic_info)
 
@@ -154,8 +154,12 @@ class PGAgent(nn.Module):
         if self.critic is None:
             advantages = q_values.copy()
         else:
-            values = ptu.to_numpy(self.critic(obs))
+            values = ptu.to_numpy(self.critic(ptu.from_numpy(obs)))
             assert values.shape == q_values.shape
+            #except:
+            #    import pdb
+            #    print("values:", values.shape, "q_values:", q_values.shape)
+            #    pdb.set_trace()
 
             if self.gae_lambda is None:
                 advantages = q_values - values
