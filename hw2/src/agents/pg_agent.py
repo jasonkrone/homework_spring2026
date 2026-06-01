@@ -156,15 +156,10 @@ class PGAgent(nn.Module):
         else:
             values = ptu.to_numpy(self.critic(ptu.from_numpy(obs)))
             assert values.shape == q_values.shape
-            #except:
-            #    import pdb
-            #    print("values:", values.shape, "q_values:", q_values.shape)
-            #    pdb.set_trace()
 
             if self.gae_lambda is None:
                 advantages = q_values - values
             else:
-                # TODO: implement GAE
                 batch_size = obs.shape[0]
 
                 # HINT: append a dummy T+1 value for simpler recursive calculation
@@ -172,10 +167,12 @@ class PGAgent(nn.Module):
                 advantages = np.zeros(batch_size + 1)
 
                 for i in reversed(range(batch_size)):
-                    # TODO: recursively compute advantage estimates starting from timestep T.
-                    # HINT: use terminals to handle edge cases. terminals[i] is 1 if the state is the last in its
-                    # trajectory, and 0 otherwise.
-                    pass
+                    # last state so there is no i+1 
+                    if terminals[i] == 1:
+                        advantages[i] = rewards[i] - values[i]
+                    # continuing an existing trajectory
+                    else:
+                        advantages[i] = rewards[i] + values[i+1] - values[i] + self.gamma * self.gae_lambda * advantages[i+1]
 
                 # remove dummy advantage
                 advantages = advantages[:-1]
