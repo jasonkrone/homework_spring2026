@@ -172,7 +172,7 @@ class PGAgent(nn.Module):
                         advantages[i] = rewards[i] - values[i]
                     # continuing an existing trajectory
                     else:
-                        advantages[i] = rewards[i] + values[i+1] - values[i] + self.gamma * self.gae_lambda * advantages[i+1]
+                        advantages[i] = rewards[i] + self.gamma*values[i+1] - values[i] + self.gamma * self.gae_lambda * advantages[i+1]
 
                 # remove dummy advantage
                 advantages = advantages[:-1]

@@ -83,10 +83,34 @@ In contrast the MSE policy agent either achieves the goal quickly and efficientl
 \item Run another experiment with a decreased number of baseline gradient steps (-bgs) or baseline learning
 rate (-blr). How does this affect (a) the baseline learning curve and (b) the performance of the policy
 \begin{itemize}
-\item (a) reducing the baseline LR or gradient steps increases the amount of env steps required for the baseline loss to plateau at a low value. In addition, changing these values causes the loss to initially increase vs. decrease. None of theses variants reach comparable loss as the default hyper-param run, and the best loss of any variant is ~68\% higher. (b) all variants lag on avg. train return while for avg. eval return all variants lag except for low LR, which catches up in the final iters.  
+\item (a) reducing the baseline LR or gradient steps increases the amount of env steps required for the baseline loss to plateau at a low value. In addition, changing these values causes the loss to initially increase vs. decrease. None of theses variants reach comparable loss as the default hyper-param run, and the best loss of any variant is ~68\% higher. (b) all variants lag on avg. train return while for avg. eval return all variants lag except for low LR, which catches up in the final iters.
 \end{itemize}
 \end{itemize}
 
+\subsection{5 Questions}
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=1.4\textwidth]{plots/hw2/lunarlander_v2.png}
+    \caption{LunarLander-v2 Learning Curves}
+\end{subfigure}
+\end{figure}
+
+\begin{itemize}
+\item Describe in words how $\lambda$ affected task performance.
+\begin{itemize}
+\item We see that increasing $\lambda$ improves the avg return. In particular, it improves the avg return for the second half of training.
+\end{itemize}
+\item Consider the parameter $\lambda$. What does $\lambda = 0$ correspond to? What about $\lambda = 1$? Relate this to the task performance in LunarLander-v2 in one or two sentences.
+\begin{itemize}
+\item $\lambda = 0$ corresponds to $A^{\pi}_{\textbf{GAE}} = \hat{A}^{\pi}(s_t, a_t) = r(s_t, a_t) + \gamma V(s_{t+1}) - V(s_t)$
+\item whereas $\lambda = 1$ corresponds to equal weight being placed on each $A_n^{\pi}(s_t, a_t)$
+\item $\lambda = 0$ is high bias low variance, while $\lambda = 1$ is low bias high variance
+\item In the graphs we see $\lambda = 0$ has the worst performance while $\lambda = 1$ has the best performance. One hypothesis for why this may be the case is that with $\lambda = 0$ there is too much bias i.e. $V^\pi_\phi$ is not a reliable estimate of the value function, which causes underperformance. Therefore, we benefit from $\lambda = 1$, which gives us lower bias at the cost of higher variance.
+\end{itemize}
+\end{itemize}
 
 \end{document}
 

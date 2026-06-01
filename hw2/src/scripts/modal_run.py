@@ -67,3 +67,39 @@ def hw2_modal_remote(*args: str) -> None:
     args = setup_arguments(args)
     main(args)
     volume.commit()
+
+
+@app.local_entrypoint()
+def run_grid() -> None:
+    n_layers_list = [2, 4, 8]
+    layer_sizes = [64, 128, 256]
+    batch_sizes = [1000, 2000, 4000]
+    learning_rates = ["1e-2", "3.16e-3", "1e-3", "3.16e-4", "1e-4"]
+    normalize_options = [True]
+
+    all_args = []
+    for n_layers in n_layers_list:
+        for layer_size in layer_sizes:
+            for batch_size in batch_sizes:
+                n = 100000 // batch_size
+                for lr in learning_rates:
+                    for na in normalize_options:
+                        na_tag = "_na" if na else ""
+                        exp_name = f"pendulum_nl{n_layers}_ls{layer_size}_bs{batch_size}_lr{lr}{na_tag}"
+                        args = [
+                            "--env_name", "InvertedPendulum-v4",
+                            "-n", str(n),
+                            "-eb", "1000",
+                            "--exp_name", exp_name,
+                            "--n_layers", str(n_layers),
+                            "--layer_size", str(layer_size),
+                            "--batch_size", str(batch_size),
+                            "--learning_rate", lr,
+                            "--use_reward_to_go",
+                        ]
+                        if na:
+                            args.append("--normalize_advantages")
+                        all_args.append(args)
+
+    for _ in hw2_modal_remote.starmap(all_args):
+        pass

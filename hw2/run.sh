@@ -1,9 +1,29 @@
 #!/bin/bash
 
 
+function 6dot0() {
+
+    # i'm okay to do ~300 runs
+
+    # --discount [1.0, 0.99, 0.9]
+    # try w/ normalize advantage off
+    # Whether to use return-to-go (default off)
+    # Whether to use GAE, and if we do, what value of λ to use (default off)
+    ########### defer till later above this line
+
+    # Deploying registers hw2_modal_remote as a persistent function. When the local entrypoint then calls spawn(), those tasks are submitted to the
+    # deployed app and run independently — your local process exits and the jobs keep going.
+    #uv run modal deploy src/scripts/modal_run.py
+    #uv run modal run src/scripts/modal_run.py
+    # uv run modal app stop hw2-pg
+    uv run modal run --detach src/scripts/modal_run.py
+
+}
+
+
 function 5dot0() {
     for lambda in 0 0.95 0.98 0.99 1; do
-        uv run src/scripts/run.py --env_name LunarLander-v2 --ep_len 1000 --discount 0.99 -n 200 -b 2000 -eb 2000 -l 3 -s 128 -lr 0.001 --use_reward_to_go --use_baseline --gae_lambda $lambda --exp_name lunar_lander_lambda$lambda
+        uv run src/scripts/run.py --env_name LunarLander-v2 --ep_len 1000 --discount 0.99 -n 200 -b 2000 -eb 2000 -l 3 -s 128 -lr 0.001 --use_reward_to_go --use_baseline --gae_lambda $lambda --exp_name discounted_lunar_lander_lambda$lambda --no_gpu
     done
 }
 
