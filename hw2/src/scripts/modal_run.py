@@ -101,5 +101,5 @@ def run_grid() -> None:
                             args.append("--normalize_advantages")
                         all_args.append(args)
 
-    for _ in hw2_modal_remote.starmap(all_args):
+    for result in hw2_modal_remote.starmap(all_args):
         pass

@@ -7,6 +7,7 @@ import gym
 import numpy as np
 import torch
 import tqdm
+import wandb
 
 from agents.pg_agent import PGAgent
 from infrastructure import utils
@@ -171,6 +172,10 @@ def main(args):
     logger = Logger(os.path.join(args.save_dir, 'log.csv'))
 
     run_training_loop(logger, args)
+
+    # Finish the run so a reused Modal container starts the next job with a
+    # fresh wandb run instead of logging into this stale one.
+    wandb.finish()
 
 
 if __name__ == "__main__":
