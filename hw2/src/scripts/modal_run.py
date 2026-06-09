@@ -71,11 +71,13 @@ def hw2_modal_remote(*args: str) -> None:
 
 @app.local_entrypoint()
 def run_grid() -> None:
-    n_layers_list = [2, 4, 8]
-    layer_sizes = [64, 128, 256]
-    batch_sizes = [1000, 2000, 4000]
-    learning_rates = ["1e-2", "3.16e-3", "1e-3", "3.16e-4", "1e-4"]
+    # 2	64	1000	0.010000
+    n_layers_list = [2] #, 4, 8]
+    layer_sizes = [64] #, 128, 256]
+    batch_sizes = [1000] #, 2000, 4000]
+    learning_rates = ["1e-2"] #, "3.16e-3", "1e-3", "3.16e-4", "1e-4"]
     normalize_options = [True]
+    gae_lambda = [0, 0.95, 0.98, 0.99, 1]
 
     all_args = []
     for n_layers in n_layers_list:
@@ -84,22 +86,25 @@ def run_grid() -> None:
                 n = 100000 // batch_size
                 for lr in learning_rates:
                     for na in normalize_options:
-                        na_tag = "_na" if na else ""
-                        exp_name = f"pendulum_nl{n_layers}_ls{layer_size}_bs{batch_size}_lr{lr}{na_tag}"
-                        args = [
-                            "--env_name", "InvertedPendulum-v4",
-                            "-n", str(n),
-                            "-eb", "1000",
-                            "--exp_name", exp_name,
-                            "--n_layers", str(n_layers),
-                            "--layer_size", str(layer_size),
-                            "--batch_size", str(batch_size),
-                            "--learning_rate", lr,
-                            "--use_reward_to_go",
-                        ]
-                        if na:
-                            args.append("--normalize_advantages")
-                        all_args.append(args)
+                        for lam in gae_lambda:
+                            na_tag = "_na" if na else ""
+                            exp_name = f"pendulum_nl{n_layers}_ls{layer_size}_bs{batch_size}_lr{lr}{na_tag}_lambda{lam}"
+                            args = [
+                                "--env_name", "InvertedPendulum-v4",
+                                "-n", str(n),
+                                "-eb", "1000",
+                                "--exp_name", exp_name,
+                                "--n_layers", str(n_layers),
+                                "--layer_size", str(layer_size),
+                                "--batch_size", str(batch_size),
+                                "--learning_rate", lr,
+                                "--use_reward_to_go",
+                            ]
+                            if na:
+                                args.append("--normalize_advantages")
+                            # add GAE args
+                            args += ["--use_baseline", "--gae_lambda", str(lam)]
+                            all_args.append(args)
 
     for result in hw2_modal_remote.starmap(all_args):
         pass

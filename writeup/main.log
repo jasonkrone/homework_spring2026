@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  31 MAY 2026 22:17
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.1)  8 JUN 2026 22:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -308,24 +308,24 @@ File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -388,78 +388,86 @@ e
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 14.
+Package hyperref Info: Link coloring OFF on input line 15.
  (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 17.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 18.
 
 
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 17.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 18.
 
 
 (/usr/local/texlive/2026basic/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-<plots/hw2/small_batch_size.png, id=28, 578.16pt x 361.35pt>
+<plots/hw2/small_batch_size.png, id=32, 578.16pt x 361.35pt>
 File: plots/hw2/small_batch_size.png Graphic file (type png)
 <use plots/hw2/small_batch_size.png>
-Package pdftex.def Info: plots/hw2/small_batch_size.png  used on input line 34.
+Package pdftex.def Info: plots/hw2/small_batch_size.png  used on input line 35.
 
 (pdftex.def)             Requested size: 225.4804pt x 140.92041pt.
-<plots/hw2/large_batch_size.png, id=30, 578.16pt x 361.35pt>
+<plots/hw2/large_batch_size.png, id=34, 578.16pt x 361.35pt>
 File: plots/hw2/large_batch_size.png Graphic file (type png)
 <use plots/hw2/large_batch_size.png>
-Package pdftex.def Info: plots/hw2/large_batch_size.png  used on input line 39.
+Package pdftex.def Info: plots/hw2/large_batch_size.png  used on input line 40.
 
 (pdftex.def)             Requested size: 225.4804pt x 140.92041pt.
  [1
 
 {/usr/local/texlive/2026basic/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./
 plots/hw2/small_batch_size.png> <./plots/hw2/large_batch_size.png>]
-<plots/hw2/half_cheetah_baseline_ablation.png, id=45, 2529.45pt x 289.08pt>
+<plots/hw2/half_cheetah_baseline_ablation.png, id=49, 1548.0234pt x 286.9119pt>
+
 File: plots/hw2/half_cheetah_baseline_ablation.png Graphic file (type png)
 <use plots/hw2/half_cheetah_baseline_ablation.png>
 Package pdftex.def Info: plots/hw2/half_cheetah_baseline_ablation.png  used on 
-input line 69.
-(pdftex.def)             Requested size: 469.75502pt x 53.68626pt.
-<plots/hw2/half_cheetah_blr_bgs.png, id=46, 2529.45pt x 289.08pt>
+input line 70.
+(pdftex.def)             Requested size: 469.75502pt x 87.06363pt.
+<plots/hw2/half_cheetah_blr_bgs.png, id=50, 1570.4271pt x 286.9119pt>
 File: plots/hw2/half_cheetah_blr_bgs.png Graphic file (type png)
 <use plots/hw2/half_cheetah_blr_bgs.png>
 Package pdftex.def Info: plots/hw2/half_cheetah_blr_bgs.png  used on input line
- 77.
-(pdftex.def)             Requested size: 469.75502pt x 53.68626pt.
-<plots/hw2/lunarlander_v2.png, id=47, 2529.45pt x 289.08pt>
+ 78.
+(pdftex.def)             Requested size: 469.75502pt x 85.8203pt.
+<plots/hw2/lunarlander_v2.png, id=51, 2529.45pt x 289.08pt>
 File: plots/hw2/lunarlander_v2.png Graphic file (type png)
 <use plots/hw2/lunarlander_v2.png>
-Package pdftex.def Info: plots/hw2/lunarlander_v2.png  used on input line 96.
+Package pdftex.def Info: plots/hw2/lunarlander_v2.png  used on input line 97.
 (pdftex.def)             Requested size: 657.65416pt x 75.15901pt.
 
-Overfull \hbox (187.89914pt too wide) in paragraph at lines 96--97
+Overfull \hbox (187.89914pt too wide) in paragraph at lines 97--98
  [][] 
  []
 
 [2 <./plots/hw2/half_cheetah_baseline_ablation.png> <./plots/hw2/half_cheetah_b
-lr_bgs.png> <./plots/hw2/lunarlander_v2.png>] [3] (./main.aux)
+lr_bgs.png> <./plots/hw2/lunarlander_v2.png>]
+<plots/hw2/invertedpendulum-v4.png, id=62, 1011.0573pt x 278.9622pt>
+File: plots/hw2/invertedpendulum-v4.png Graphic file (type png)
+<use plots/hw2/invertedpendulum-v4.png>
+Package pdftex.def Info: plots/hw2/invertedpendulum-v4.png  used on input line 
+122.
+(pdftex.def)             Requested size: 469.75502pt x 129.60966pt.
+ [3 <./plots/hw2/invertedpendulum-v4.png>] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: E1FC1221417276885CB33B20DDCD2256;824.
+(rerunfilecheck)             Checksum: 9D5E7E456C932C8E825297695FB2F5D3;939.
  ) 
 Here is how much of TeX's memory you used:
- 11596 strings out of 469006
- 182497 string characters out of 5454814
+ 11610 strings out of 469006
+ 182868 string characters out of 5454814
  594733 words of memory out of 5000000
- 40162 multiletter control sequences out of 15000+600000
- 636837 words of font info for 75 fonts, out of 8000000 for 9000
+ 40173 multiletter control sequences out of 15000+600000
+ 637004 words of font info for 76 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
- 75i,8n,79p,540b,580s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,8n,79p,540b,603s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/jasonkrone/Library/texlive/2026basic/texmf-var/fonts/pk/ljfour/jknap
 pen/ec/tcrm1000.600pk></usr/local/texlive/2026basic/texmf-dist/fonts/type1/publ
 ic/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2026basic/texmf-dist/fonts/type1/
@@ -471,11 +479,12 @@ t/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026basic/texmf-
 dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/texlive/2026basic/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026basic/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2026basic
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on main.pdf (3 pages, 901302 bytes).
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026b
+asic/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on main.pdf (3 pages, 973816 bytes).
 PDF statistics:
- 118 PDF objects out of 1000 (max. 8388607)
- 81 compressed objects within 1 object stream
- 13 named destinations out of 1000 (max. 500000)
- 74 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 130 PDF objects out of 1000 (max. 8388607)
+ 89 compressed objects within 1 object stream
+ 15 named destinations out of 1000 (max. 500000)
+ 87 words of extra memory for PDF output out of 10000 (max. 10000000)
 

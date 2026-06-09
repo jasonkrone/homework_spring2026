@@ -5,6 +5,7 @@
 \usepackage{subcaption}
 \usepackage{hyperref}
 
+
 \renewcommand{\thesection}{\Roman{section}}
 
 \title{Deep RL}
@@ -111,6 +112,18 @@ rate (-blr). How does this affect (a) the baseline learning curve and (b) the pe
 \item In the graphs we see $\lambda = 0$ has the worst performance while $\lambda = 1$ has the best performance. One hypothesis for why this may be the case is that with $\lambda = 0$ there is too much bias i.e. $V^\pi_\phi$ is not a reliable estimate of the value function, which causes underperformance. Therefore, we benefit from $\lambda = 1$, which gives us lower bias at the cost of higher variance.
 \end{itemize}
 \end{itemize}
+
+\subsection{6 Questions}
+
+\begin{figure}[h]
+\centering
+\begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{plots/hw2/invertedpendulum-v4.png}
+    \caption{Our best config hits 1000 avg. eval return in 34,855 env steps. In comparison, the baseline requires 313,027 steps (8.98x more). The command for my best config is \texttt{n\_layers=2}, \texttt{layer\_size=64}, \texttt{batch\_size=1000}, \texttt{lr=1e-2}, \texttt{normalize\_advantages=T}, \texttt{use\_baseline=T}, \texttt{gae\_lambda=0.95}, \texttt{use\_reward\_to\_go=T}}
+\end{subfigure}
+\end{figure}
+
 
 \end{document}
 
