@@ -62,7 +62,7 @@ env = {
 }
 
 
-@app.function(volumes={VOLUME_PATH: volume}, timeout=60 * 60 * 1, env=env, image=image, gpu=DEFAULT_GPU, cpu=DEFAULT_CPU, memory=DEFAULT_MEMORY, max_containers=10)
+@app.function(volumes={VOLUME_PATH: volume}, timeout=60 * 60 * 1, env=env, image=image, gpu=DEFAULT_GPU, cpu=DEFAULT_CPU, memory=DEFAULT_MEMORY, max_containers=10, max_inputs=1)
 def hw2_modal_remote(*args: str) -> None:
     args = setup_arguments(args)
     main(args)
