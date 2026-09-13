@@ -67,27 +67,40 @@ class DQNAgent(nn.Module):
         # Compute target values
         with torch.no_grad():
             # TODO(Section 2.4): compute target values
-            next_qa_values = None
+
+            # next qa values = Q(s')
+            # [B, A]
+            next_qa_values = self.critic(next_obs)
 
             if self.use_double_q:
                 # TODO(Section 2.5): implement double-Q target action selection
                 next_action = None
             else:
-                next_action = None
+                # argmax A of next_qa_values
+                # [B,]
+                next_action = next_qa_values.argmax(axis=-1)
 
-            next_q_values = None
+            # next qa values @ A ... i.e. Q(s', a')
+            # [B,]
+            next_q_values = torch.gather(next_qa_values, dim=-1, index=next_action.unsqueeze(-1)).squeeze()
             assert next_q_values.shape == (batch_size,), next_q_values.shape
 
-            target_values = None
+            # this is y_i = reward + gamma * next_q_values
+            target_values = reward + self.discount * next_q_values
             assert target_values.shape == (batch_size,), target_values.shape
             # ENDTODO
 
         # TODO(Section 2.4): train the critic with the target values
-        qa_values = None
-        q_values = None
-        loss = None
-        # ENDTODO
 
+        # Q_phi(s)
+        # [B, A]
+        qa_values = self.critic(obs)
+        # Q_phi(a)
+        q_values = torch.gather(qa_values, dim=-1, index=action.unsqeeze(-1)).squeeze()
+        # || Q(S, A) - y||^2 
+        loss = (0.5 * (q_values - target_values)**2).mean()
+        # ENDTODO
+        
         self.critic_optimizer.zero_grad()
         loss.backward()
         grad_norm = torch.nn.utils.clip_grad.clip_grad_norm_(
